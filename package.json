@@ -19,6 +19,8 @@
     "sequelize-cli": "^1.9.2",
     "serve-favicon": "~2.3.0",
     "sqlite3": "^3.0.8",
+    "passport": "*",
+    "passport-local": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.33",

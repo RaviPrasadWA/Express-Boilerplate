@@ -7,8 +7,26 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users  = require('./routes/users');
+var auth  = require('./routes/auth');
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+var models = require('./models');
+
 
 var app = express();
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +42,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/auth', auth);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,6 +61,15 @@ app.use(function(err, req, res, next) {
     error: (app.get('env') === 'development') ? err : {}
   });
 });
+
+passport.use(new LocalStrategy(function(username, password, done) {
+  process.nextTick(function() {
+
+    console.log( username, password );
+    return done(false);
+
+  });
+}));
 
 
 module.exports = app;
