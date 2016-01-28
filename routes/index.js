@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
     include: [ models.Property ]
   }).then(function(users) {
     res.render('index', {
-      title: 'Reporting',
+      title: 'Administration',
       users: users
     });
   });
