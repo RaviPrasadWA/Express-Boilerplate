@@ -1,0 +1,55 @@
+extends layout
+
+block content
+
+  h1(class="dashboard-heading")= title
+  div
+    button(class="btn add-user") Add User
+
+  h2 Users
+
+  ul
+  each user in users
+    li
+      = user.username
+      | &nbsp;
+      = user.email
+      | &nbsp;
+      | (
+      a(href="/users/" + user.id + "/destroy") Destroy
+      | )
+
+  script.
+    $('.add-user').click(function(){
+      vex.dialog.open(
+      { message : "<h2 class='dashboard-heading'>Create a new User</h2>",
+       input : "<input name='username' type='text' placeholder='Username' required /><input name='email' type='text' placeholder='Email' required />",
+       callback : function(data){
+        if( data ){
+          $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/users/create',
+            data: data,
+            success: function(a,b,c){
+              console.log(a,b,c.status);
+              location.reload();
+            },
+            error: function(response){
+              if( response.status == 409 ){
+                vex.dialog.open({
+                  message: "<h2 class='dashboard-heading'>User already exists</h2>"
+                });
+              }
+
+              if( response.status == 422 ){
+                vex.dialog.open({
+                  message: "<h2 class='dashboard-heading'>User email invalid</h2>"
+                });
+              }
+            }
+          });
+        }
+       }
+      });
+    })
+
