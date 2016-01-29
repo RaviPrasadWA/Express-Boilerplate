@@ -2,7 +2,7 @@
 
 <2> Install node.js on your system
 
-<2> Get inside the project directory then run npm install ( npm will install dependancies ).
+<3> Get inside the project directory then run npm install ( npm will install dependancies ).
 
-<3> Start application server by running 
+<4> Start application server by running 
 		node bin/www
