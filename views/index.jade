@@ -56,6 +56,21 @@ block content
   else
     script.
       vex.dialog.open({
-        message: "<h2 class='dashboard-heading'> Please login </h2>"
+        message: "<h2 class='dashboard-heading'> Please login </h2>",
+        input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='text' placeholder='Password' required />",
+        callback : function(data){
+          $.ajax({
+            url: 'http://localhost:3000/auth/login',
+            type: 'POST',
+            data: data,
+            success: function(a,b,c){ 
+                location.reload();
+              },
+            error: function(response){
+              console.log( response );
+            }
+
+          });
+        }
       });
 

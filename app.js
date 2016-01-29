@@ -46,6 +46,14 @@ app.use(function(req,res,next){
     next();
 });
 
+passport.use(new LocalStrategy(function(username, password, done) {
+	process.nextTick(function() {
+		models.User.findOne({ where: { email: username } }).then(function(user){
+			return done(null, user);
+		});
+	});
+}));
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
@@ -68,13 +76,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-passport.use(new LocalStrategy(function(username, password, done) {
-  process.nextTick(function() {
-  	models.User.findOne({ where: { email: username } }).then(function(user){
-  		return done(null, user);
-  	});
-  });
-}));
 
 
 
