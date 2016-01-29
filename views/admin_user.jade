@@ -3,24 +3,36 @@ extends layout
 block content
 
   if req.user
+    div(class="dashboard-page")
+    div(class="container-fluid")
+      div(class="row")
+        div(class="col-sm-3 sidebar admin-sidebar")
+          div(class="text-center")
+            h2(class="brand")= title
+            img(src="images/flat-avatar.png" class="user-avatar")
+            div(class="row")
+              a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
+        div(class="info-display")
+          div(class="col-md-9")
+            h2(class="dashboard-heading") Users
+            button(class="btn add-user") Add User
 
-    h1(class="dashboard-heading")= title
-    div
-      button(class="btn add-user") Add User
+          div(class="col-md-9")
 
-    h2 Users
-
-    ul
-    each user in users
-      li
-        = user.username
-        | &nbsp;
-        = user.email
-        | &nbsp;
-        | (
-        a(href="/users/" + user.id + "/destroy") Destroy
-        | )
-
+            div(class="table-responsive")
+              table(class="table")
+                thead
+                  tr
+                    th Username
+                    th Email
+                    th Actions
+                  each user in users   
+                    tbody
+                      tr
+                        td= user.username
+                        td= user.email
+                        td 
+                          a(href="/users/" + user.id + "/destroy") Delete
     script.
       $('.add-user').click(function(){
         vex.dialog.open(

@@ -8,6 +8,7 @@ var expressSession = require('express-session');
 var routes = require('./routes/index');
 var users  = require('./routes/users');
 var auth  = require('./routes/auth');
+var admin  = require('./routes/admin');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -58,6 +59,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
+app.use('/admin',admin);
 
 
 // catch 404 and forward to error handler
