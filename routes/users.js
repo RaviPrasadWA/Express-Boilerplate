@@ -36,5 +36,4 @@ router.get('/:user_id/destroy', function(req, res) {
 });
 
 
-
 module.exports = router;
