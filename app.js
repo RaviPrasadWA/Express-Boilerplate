@@ -48,7 +48,8 @@ app.use(function(req,res,next){
 
 passport.use(new LocalStrategy(function(username, password, done) {
 	process.nextTick(function() {
-		models.User.findOne({ where: { email: username } }).then(function(user){
+		models.User.findOne({ where: { email: username,
+										password: password } }).then(function(user){
 			return done(null, user);
 		});
 	});

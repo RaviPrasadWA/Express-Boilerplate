@@ -11,7 +11,8 @@ router.post('/create', function(req, res) {
        if( models.User.validateEmail( req.body.email) ){  // Validate the email of the User
         models.User.create({
           username: req.body.username,
-          email: req.body.email
+          email: req.body.email,
+          password: req.body.password
         }).then(function() {
           res.status(200);
           res.send("Succesful...");

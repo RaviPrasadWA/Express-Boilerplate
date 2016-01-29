@@ -25,30 +25,36 @@ block content
       $('.add-user').click(function(){
         vex.dialog.open(
         { message : "<h2 class='dashboard-heading'>Create a new User</h2>",
-         input : "<input name='username' type='text' placeholder='Username' required /><input name='email' type='text' placeholder='Email' required />",
+         input : "<input name='username' type='text' placeholder='Username' required /><input name='email' type='text' placeholder='Email' required /><input name='password' type='password' placeholder='Password' required /><input name='repeat_password' type='password' placeholder='Repeat Password' required />",
          callback : function(data){
           if( data ){
-            $.ajax({
-              type: 'POST',
-              url: 'http://localhost:3000/users/create',
-              data: data,
-              success: function(a,b,c){
-                location.reload();
-              },
-              error: function(response){
-                if( response.status == 409 ){
-                  vex.dialog.open({
-                    message: "<h2 class='dashboard-heading'>User already exists</h2>"
-                  });
-                }
+            if( data.password == data.repeat_password ){
+              $.ajax({
+                type: 'POST',
+                url: 'http://localhost:3000/users/create',
+                data: data,
+                success: function(a,b,c){
+                  location.reload();
+                },
+                error: function(response){
+                  if( response.status == 409 ){
+                    vex.dialog.open({
+                      message: "<h2 class='dashboard-heading'>User already exists</h2>"
+                    });
+                  }
 
-                if( response.status == 422 ){
-                  vex.dialog.open({
-                    message: "<h2 class='dashboard-heading'>User email invalid</h2>"
-                  });
+                  if( response.status == 422 ){
+                    vex.dialog.open({
+                      message: "<h2 class='dashboard-heading'>User email invalid</h2>"
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }else{
+              vex.dialog.open({
+                message: "<h2 class='dashboard-heading'>Password does not Match</h2>"
+                });
+            }
           }
          }
         });
@@ -57,7 +63,7 @@ block content
     script.
       vex.dialog.open({
         message: "<h2 class='dashboard-heading'> Please login </h2>",
-        input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='text' placeholder='Password' required />",
+        input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='password' placeholder='Password' required />",
         callback : function(data){
           $.ajax({
             url: 'http://localhost:3000/auth/login',
