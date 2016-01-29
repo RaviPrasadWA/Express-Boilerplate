@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var expressSession = require('express-session');
 var routes = require('./routes/index');
 var users  = require('./routes/users');
 var auth  = require('./routes/auth');
@@ -17,8 +17,6 @@ var models = require('./models');
 
 var app = express();
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -38,6 +36,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(expressSession({secret: 'ggihj#$#vhjvjhhjghvg56%^R'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -64,10 +65,9 @@ app.use(function(err, req, res, next) {
 
 passport.use(new LocalStrategy(function(username, password, done) {
   process.nextTick(function() {
-
-    console.log( username, password );
-    return done(false);
-
+  	models.User.findOne({ where: { email: username } }).then(function(user){
+  		return done(null, user);
+  	});
   });
 }));
 

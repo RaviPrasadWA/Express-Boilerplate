@@ -5,8 +5,8 @@ var passport = require('passport');
 
 router.post('/login',
   passport.authenticate('local', {
-    successRedirect: '/loginSuccess',
-    failureRedirect: '/loginFailure'
+    successRedirect: '/auth/loginSuccess',
+    failureRedirect: '/auth/loginFailure'
   })
 );
 
@@ -15,7 +15,8 @@ router.get('/loginFailure', function(req, res, next) {
 });
 
 router.get('/loginSuccess', function(req, res, next) {
-  res.send('Successfully authenticated');
+	console.log( req.user );
+	res.send('Successfully authenticated');
 });
 
 
