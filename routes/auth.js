@@ -11,11 +11,10 @@ router.post('/login',
 );
 
 router.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
+	res.send('Failed to authenticate');
 });
 
 router.get('/loginSuccess', function(req, res, next) {
-	console.log( req.user );
 	res.send('Successfully authenticated');
 });
 

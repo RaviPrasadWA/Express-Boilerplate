@@ -41,6 +41,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req,res,next){
+    res.locals.req = req;
+    next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
@@ -70,6 +75,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
   	});
   });
 }));
+
 
 
 module.exports = app;
