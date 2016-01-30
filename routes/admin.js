@@ -12,6 +12,7 @@ router.get('/', function(req, res) {
 				models.User.findAll({}).then(function(users) {
 					res.render('admin_user', {
 						title: 'User Administration',
+						name: 'Users',
 						users: users
 					});
 				});
@@ -28,5 +29,15 @@ router.get('/', function(req, res) {
 		});
 	}
 });
+
+router.get('/roles', function(req, res){
+	models.Role.findAll({}).then(function(roles){
+		res.render('admin_role',{
+			title: 'Role Administration',
+			name: 'Roles',
+			roles: roles
+		});
+	});
+})
 
 module.exports = router;

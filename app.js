@@ -27,8 +27,8 @@ models.User.create({  username: "Ravi Prasad",
                       password: "ravi@123" }).then(function(user){
                         console.log(user);
                       });
-*/
 
+*/
 // Format roles, resources, permissions
 // Implementing a CRUD interface for the admin interface
 // Admin permission model
@@ -42,7 +42,7 @@ acl.allow('superuser', 'admin', 'delete');
 acl.allow('staff', 'admin', 'retrieve');
 acl.allow('staff', 'admin', 'update');
 
-acl.addUserRoles(1, 'superuser');
+acl.addUserRoles(1, 'staff');
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -65,6 +65,7 @@ app.use(cookieParser());
 app.use(expressSession({secret: 'ggihj#$#vhjvjhhjghvg56%^R'}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req,res,next){

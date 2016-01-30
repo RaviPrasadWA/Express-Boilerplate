@@ -13,10 +13,12 @@ block content
               a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
             div( class="btn btn-sm btn-block btn-default user-admin-nav" )
               a(href="/admin") USER
+            div( class="btn btn-sm btn-block btn-default user-admin-nav" )
+              a(href="/admin/roles") ROLES
 
         div(class="info-display")
           div(class="col-md-9")
-            h2(class="dashboard-heading") Users
+            h2(class="dashboard-heading")= name
             button(class="btn add-user") Add User
 
           div(class="col-md-9")
