@@ -3,7 +3,6 @@ extends layout
 block content
 
   if req.user
-    div(class="dashboard-page")
     div(class="container-fluid")
       div(class="row")
         div(class="col-sm-3 sidebar admin-sidebar")
@@ -12,6 +11,9 @@ block content
             img(src="images/flat-avatar.png" class="user-avatar")
             div(class="row")
               a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
+            div( class="btn btn-sm btn-block btn-default user-admin-nav" )
+              a(href="/admin") USER
+
         div(class="info-display")
           div(class="col-md-9")
             h2(class="dashboard-heading") Users
@@ -32,7 +34,8 @@ block content
                         td= user.username
                         td= user.email
                         td 
-                          a(href="/users/" + user.id + "/destroy") Delete
+                          a(href="/users/" + user.id + "/destroy") 
+                            button(type="button" class="btn btn-xs btn-danger") X
     script.
       $('.add-user').click(function(){
         vex.dialog.open(

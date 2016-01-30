@@ -21,7 +21,10 @@
     "sqlite3": "^3.0.8",
     "passport": "*",
     "express-session": "*",
-    "passport-local": "*"
+    "passport-local": "*",
+    "knex": "*",
+    "acl": "*",
+    "acl-knex": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.33",

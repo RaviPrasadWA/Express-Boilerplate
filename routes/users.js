@@ -31,7 +31,7 @@ router.get('/:user_id/destroy', function(req, res) {
       id: req.params.user_id
     }
   }).then(function() {
-    res.redirect('/');
+    res.redirect('/admin');
   });
 });
 
