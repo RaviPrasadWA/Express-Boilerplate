@@ -21,8 +21,28 @@ acl = new acl(new acl.redisBackend(client, "acl_"));
 
 var app = express();
 
-acl.allow('admin', 'admin', 'view');
+/*
+models.User.create({  username: "Ravi Prasad",
+                      email: "r58641@gmail.com",
+                      password: "ravi@123" }).then(function(user){
+                        console.log(user);
+                      });
+*/
 
+// Format roles, resources, permissions
+// Implementing a CRUD interface for the admin interface
+// Admin permission model
+acl.allow('superuser', 'admin', 'create');
+acl.allow('superuser', 'admin', 'retrieve');
+acl.allow('superuser', 'admin', 'update');
+acl.allow('superuser', 'admin', 'delete');
+
+// Staff permisssion model
+// Staff can only update the model
+acl.allow('staff', 'admin', 'retrieve');
+acl.allow('staff', 'admin', 'update');
+
+acl.addUserRoles(1, 'superuser');
 
 passport.serializeUser(function(user, done) {
   done(null, user);
