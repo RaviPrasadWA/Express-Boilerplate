@@ -15,8 +15,13 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var models = require('./models');
 
+var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
+var acl = require('acl');
+acl = new acl(new acl.redisBackend(client, "acl_"));
 
 var app = express();
+
+acl.allow('admin', 'admin', 'view');
 
 
 passport.serializeUser(function(user, done) {

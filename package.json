@@ -22,9 +22,7 @@
     "passport": "*",
     "express-session": "*",
     "passport-local": "*",
-    "knex": "*",
-    "acl": "*",
-    "acl-knex": "*"
+    "acl": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.33",
