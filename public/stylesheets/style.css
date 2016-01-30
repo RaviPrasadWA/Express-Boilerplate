@@ -28,7 +28,7 @@ a {
 	margin-left: 10%;
 }
 
-.add-user{
+.add-user , .add-role{
   float: right;
 }
 
@@ -80,7 +80,7 @@ div a.logout{
   margin-top: 15px;
 }
 
-.add-user{
+.add-user , .add-role{
   margin-top: 25px;
 }
 

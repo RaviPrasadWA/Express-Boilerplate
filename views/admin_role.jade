@@ -19,7 +19,7 @@ block content
 				div(class="info-display")
 					div(class="col-md-9")
 						h2(class="dashboard-heading")= name
-						button(class="btn add-user") Add Role
+						button(class="btn add-role") Add Role
 
 					div(class="col-md-9")
 						div(class="table-responsive")
@@ -31,6 +31,27 @@ block content
 									tbody
 										tr
 											td= role.name
+		script.
+			$('.add-role').click(function(){
+				vex.dialog.open({
+					message: "<h2 class='dashboard-heading'> Create New Role </h2>",
+					input : "<input name='name' type='text' placeholder='Name' required />",
+					callback: function(data){
+						$.ajax({
+							type: 'POST',
+							url: '',
+							data: data,
+							success: function(a,b,c){
+								location.reload();
+							}
+							error: function(response){
+								console.log( response );
+							}
+						})
+						console.log( data );
+					}
+				});
+			});
 	else
 		script.
 			vex.dialog.open({
