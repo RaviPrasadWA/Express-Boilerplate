@@ -61,21 +61,23 @@ router.get('/roles/permission', function(req, res){
 router.post('/roles/permission/create', function(req, res){
 	if( req.user ){
 		req.body = JSON.parse(JSON.stringify(req.body));
-		models.Permission.findOne({ where: {resource: req.body['resource']} }).then(function(permission) {
-			if( permission == null ){
-				models.Permission.create({
-					resource: req.body['resource'],
-					create: req.body.hasOwnProperty('create'),
-					retrieve: req.body.hasOwnProperty('retrieve'),
-					modify: req.body.hasOwnProperty('update'),
-					remove: req.body.hasOwnProperty('delete')
-				});
-				res.redirect('/admin/roles/permission');
-			}else{
-				res.statusCode = 409;
-				res.send('permission with this name already exists ...');
-			}
-		});
+		if( Object.keys(req.body).length > 0 ){
+			models.Permission.findOne({ where: {resource: req.body['resource']} }).then(function(permission) {
+				if( permission == null ){
+					models.Permission.create({
+						resource: req.body['resource'],
+						create: req.body.hasOwnProperty('create'),
+						retrieve: req.body.hasOwnProperty('retrieve'),
+						modify: req.body.hasOwnProperty('update'),
+						remove: req.body.hasOwnProperty('delete')
+					});
+					res.redirect('/admin/roles/permission');
+				}else{
+					res.statusCode = 409;
+					res.send('permission with this name already exists ...');
+				}
+			});
+		}
 	}
 })
 

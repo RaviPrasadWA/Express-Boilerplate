@@ -75,9 +75,61 @@ block content
 
 		script.
 			$('.permission-edit').click(function(){
-				console.log(this.parentElement.parentElement.children[0].textContent);
-				console.log(this.parentElement.parentElement.children[1].textContent);
-				console.log(this.parentElement.parentElement.children[2].textContent);
+				
+				var resource_inp = "<input name='resource' type='text' placeholder='Resource' value='"+ this.parentElement.parentElement.children[0].textContent + "' required />";
+
+
+				var create_inp = "<label class='checkbox-inline'><input type='checkbox' name='create'";
+				if(JSON.parse(this.parentElement.parentElement.children[1].textContent)){
+					create_inp += " checked>CREATE</label>";
+				}else{
+					create_inp += ">CREATE</label>";
+				}
+
+				var retrieve_inp = "<label class='checkbox-inline'><input type='checkbox' name='retrieve'";
+				if(JSON.parse(this.parentElement.parentElement.children[2].textContent)){
+					retrieve_inp += " checked>RETRIEVE</label>";
+				}else{
+					retrieve_inp += ">RETRIEVE</label>";
+				}
+
+				var update_inp = "<label class='checkbox-inline'><input type='checkbox' name='update'";
+				console.log(this.parentElement.parentElement.children[3].textContent);
+				if(JSON.parse(this.parentElement.parentElement.children[3].textContent)){
+					update_inp += " checked>UPDATE</label>";
+				}else{
+					update_inp += ">UPDATE</label>";
+				}
+
+				var delete_inp = "<label class='checkbox-inline'><input type='checkbox' name='delete'";
+				console.log(this.parentElement.parentElement.children[3].textContent);
+				if(JSON.parse(this.parentElement.parentElement.children[3].textContent)){
+					delete_inp += " checked>DELETE</label>";
+				}else{
+					delete_inp += ">DELETE</label>";
+				}
+
+				vex.dialog.open({
+					message: "<h2 class='dashboard-heading'> Edit Existing Permission </h2>",
+					input : resource_inp + create_inp + retrieve_inp + update_inp + delete_inp,
+					callback: function(data){
+						$.ajax({
+							type: 'POST',
+							url: 'http://localhost:3000/admin/roles/permission/create',
+							data: data,
+							success: function(a,b,c){
+								location.reload();
+							},
+							error: function(response){
+								if( response.status == 409 ){
+									vex.dialog.open({
+										message: "<h2 class='dashboard-heading'>Permission already exists</h2>"
+										});
+								}
+							}
+						})
+					}
+				});
 			})
 	else
 		script.
