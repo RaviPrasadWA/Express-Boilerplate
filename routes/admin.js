@@ -40,4 +40,46 @@ router.get('/roles', function(req, res){
 	});
 })
 
+router.post('/roles/create', function(req, res){
+	if( req.user ){
+		console.log( req.body );
+		res.send("got data .....");
+	}
+})
+
+
+router.get('/roles/permission', function(req, res){
+	models.Permission.findAll({}).then(function(permissions){
+		res.render('admin_permission',{
+			title: 'Permission Admin',
+			name: 'Permission',
+			permissions: permissions
+		});
+	});
+})
+
+router.post('/roles/permission/create', function(req, res){
+	if( req.user ){
+		req.body = JSON.parse(JSON.stringify(req.body));
+		var create = req.body.
+		models.Permission.findOrCreate({ where: { resource: req.body['resource'] } }).spread(
+			function(permission, created){
+				permission.update({ create: req.body.hasOwnProperty('create'),
+									retrieve: req.body.hasOwnProperty('retrieve'),
+									modify: req.body.hasOwnProperty('update'),
+									remove: req.body.hasOwnProperty('delete') 
+								}, { fields: ['create', 'retrieve', 'modify', 'remove'] }).then(function(){
+									res.redirect('/admin/roles/permission');
+								});
+			});
+	}
+})
+
+router.get('/:permission_id/roles/permission/destroy', function(req, res) {
+	models.Permission.destroy({
+		where: { id: req.params.permission_id }}).then(function() {
+			res.redirect('/admin/roles/permission');
+		});
+	});
+
 module.exports = router;
