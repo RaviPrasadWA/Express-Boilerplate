@@ -33,8 +33,14 @@ block content
 									tbody
 										tr
 											td= role.name
+				div(class="permission-role-info" style="display: none")
+					each permission in permissions
+						div(class="display-info" id=permission.id)= permission.resource
 		script.
 			$('.add-role').click(function(){
+				$(".permission-role-info .display-info").each(function(index){
+					console.log( this.id, this.textContent );
+				})
 				vex.dialog.open({
 					message: "<h2 class='dashboard-heading'> Create New Role </h2>",
 					input : "<input name='name' type='text' placeholder='Name' required />",

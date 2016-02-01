@@ -27,21 +27,40 @@ block content
 							table(class="table")
 								thead
 									tr
-										th Resource
-										th C
-										th R
-										th U
-										th D
-										th Action
+										th(style="text-align: center;") id
+										th(style="text-align: center;") Resource
+										th(style="text-align: center;") C
+										th(style="text-align: center;") R
+										th(style="text-align: center;") U
+										th(style="text-align: center;") D
+										th(style="text-align: center;") Action
 								tbody
 									each permission in permissions   
 										tr
-											td= permission.resource
-											td= permission.create
-											td= permission.retrieve
-											td= permission.modify
-											td= permission.remove
-											td
+											td(style="text-align: center;")= permission.id
+											td(style="text-align: center;")= permission.resource
+
+											if( permission.create )
+												td(style="text-align: center;color: #5CB85C;")= permission.create
+											else
+												td(style="text-align: center;color: #D9534F;")= permission.create
+
+											if( permission.retrieve )
+												td(style="text-align: center;color: #5CB85C;")= permission.retrieve
+											else
+												td(style="text-align: center;color: #D9534F;")= permission.retrieve
+
+											if( permission.modify )
+												td(style="text-align: center;color: #5CB85C;")= permission.modify
+											else
+												td(style="text-align: center;color: #D9534F;")= permission.modify
+
+											if( permission.remove )
+												td(style="text-align: center;color: #5CB85C;")= permission.remove
+											else
+												td(style="text-align: center;color: #D9534F;")= permission.remove
+
+											td(style="text-align: center;")
 												a(href="/admin/" + permission.id + "/roles/permission/destroy") 
 													button(type="button" class="btn btn-xs btn-danger")
 														span(class="glyphicon glyphicon-remove")
@@ -76,46 +95,47 @@ block content
 		script.
 			$('.permission-edit').click(function(){
 				
-				var resource_inp = "<input name='resource' type='text' placeholder='Resource' value='"+ this.parentElement.parentElement.children[0].textContent + "' required />";
+				var resource_inp = "<input name='resource' type='text' placeholder='Resource' value='"+ this.parentElement.parentElement.children[1].textContent + "' required />";
 
 
 				var create_inp = "<label class='checkbox-inline'><input type='checkbox' name='create'";
-				if(JSON.parse(this.parentElement.parentElement.children[1].textContent)){
+				if(JSON.parse(this.parentElement.parentElement.children[2].textContent)){
 					create_inp += " checked>CREATE</label>";
 				}else{
 					create_inp += ">CREATE</label>";
 				}
 
 				var retrieve_inp = "<label class='checkbox-inline'><input type='checkbox' name='retrieve'";
-				if(JSON.parse(this.parentElement.parentElement.children[2].textContent)){
+				if(JSON.parse(this.parentElement.parentElement.children[3].textContent)){
 					retrieve_inp += " checked>RETRIEVE</label>";
 				}else{
 					retrieve_inp += ">RETRIEVE</label>";
 				}
 
 				var update_inp = "<label class='checkbox-inline'><input type='checkbox' name='update'";
-				console.log(this.parentElement.parentElement.children[3].textContent);
-				if(JSON.parse(this.parentElement.parentElement.children[3].textContent)){
+				if(JSON.parse(this.parentElement.parentElement.children[4].textContent)){
 					update_inp += " checked>UPDATE</label>";
 				}else{
 					update_inp += ">UPDATE</label>";
 				}
 
 				var delete_inp = "<label class='checkbox-inline'><input type='checkbox' name='delete'";
-				console.log(this.parentElement.parentElement.children[3].textContent);
-				if(JSON.parse(this.parentElement.parentElement.children[3].textContent)){
+				if(JSON.parse(this.parentElement.parentElement.children[5].textContent)){
 					delete_inp += " checked>DELETE</label>";
 				}else{
 					delete_inp += ">DELETE</label>";
 				}
 
+				var id_ = this.parentElement.parentElement.children[0].textContent;
+
 				vex.dialog.open({
 					message: "<h2 class='dashboard-heading'> Edit Existing Permission </h2>",
 					input : resource_inp + create_inp + retrieve_inp + update_inp + delete_inp,
 					callback: function(data){
+						data['id'] = id_;
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:3000/admin/roles/permission/create',
+							url: 'http://localhost:3000/admin/roles/permission/edit',
 							data: data,
 							success: function(a,b,c){
 								location.reload();

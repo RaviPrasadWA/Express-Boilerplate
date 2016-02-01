@@ -32,10 +32,13 @@ router.get('/', function(req, res) {
 
 router.get('/roles', function(req, res){
 	models.Role.findAll({}).then(function(roles){
-		res.render('admin_role',{
+		models.Permission.findAll({}).then(function(permissions){
+			res.render('admin_role',{
 			title: 'Role Administration',
 			name: 'Roles',
-			roles: roles
+			roles: roles,
+			permissions: permissions
+			});
 		});
 	});
 })
@@ -87,5 +90,25 @@ router.get('/:permission_id/roles/permission/destroy', function(req, res) {
 			res.redirect('/admin/roles/permission');
 		});
 	});
+
+router.post('/roles/permission/edit', function(req, res) {
+	if( req.user ){
+		req.body = JSON.parse(JSON.stringify(req.body));
+		var create = req.body.hasOwnProperty('create');
+		var retrieve = req.body.hasOwnProperty('retrieve');
+		var modify = req.body.hasOwnProperty('update');
+		var remove = req.body.hasOwnProperty('delete');
+		models.Permission.findOne({ where: {id: req.body['id'] }}).then(function(permission){
+			permission.update({
+				create: create,
+				retrieve: retrieve,
+				modify: modify,
+				remove: remove
+			}).then(function(){
+				res.redirect('/admin/roles/permission');
+			});
+		});
+	}
+});
 
 module.exports = router;
