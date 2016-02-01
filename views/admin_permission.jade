@@ -43,7 +43,11 @@ block content
 											td= permission.remove
 											td
 												a(href="/admin/" + permission.id + "/roles/permission/destroy") 
-													button(type="button" class="btn btn-xs btn-danger") X
+													button(type="button" class="btn btn-xs btn-danger")
+														span(class="glyphicon glyphicon-remove")
+												a(href="#" class="permission-edit") 
+													button(type="button" class="btn btn-xs btn-success")
+														span(class="glyphicon glyphicon-edit")
 		script.
 			$('.add-permission').click(function(){
 				vex.dialog.open({
@@ -68,6 +72,13 @@ block content
 					}
 				});
 			});
+
+		script.
+			$('.permission-edit').click(function(){
+				console.log(this.parentElement.parentElement.children[0].textContent);
+				console.log(this.parentElement.parentElement.children[1].textContent);
+				console.log(this.parentElement.parentElement.children[2].textContent);
+			})
 	else
 		script.
 			vex.dialog.open({

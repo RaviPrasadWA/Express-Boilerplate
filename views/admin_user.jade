@@ -39,7 +39,8 @@ block content
                         td= user.email
                         td 
                           a(href="/users/" + user.id + "/destroy") 
-                            button(type="button" class="btn btn-xs btn-danger") X
+                            button(type="button" class="btn btn-xs btn-danger")
+                              span(class="glyphicon glyphicon-remove")
     script.
       $('.add-user').click(function(){
         vex.dialog.open(
