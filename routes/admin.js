@@ -61,17 +61,21 @@ router.get('/roles/permission', function(req, res){
 router.post('/roles/permission/create', function(req, res){
 	if( req.user ){
 		req.body = JSON.parse(JSON.stringify(req.body));
-		var create = req.body.
-		models.Permission.findOrCreate({ where: { resource: req.body['resource'] } }).spread(
-			function(permission, created){
-				permission.update({ create: req.body.hasOwnProperty('create'),
-									retrieve: req.body.hasOwnProperty('retrieve'),
-									modify: req.body.hasOwnProperty('update'),
-									remove: req.body.hasOwnProperty('delete') 
-								}, { fields: ['create', 'retrieve', 'modify', 'remove'] }).then(function(){
-									res.redirect('/admin/roles/permission');
-								});
-			});
+		models.Permission.findOne({ where: {resource: req.body['resource']} }).then(function(permission) {
+			if( permission == null ){
+				models.Permission.create({
+					resource: req.body['resource'],
+					create: req.body.hasOwnProperty('create'),
+					retrieve: req.body.hasOwnProperty('retrieve'),
+					modify: req.body.hasOwnProperty('update'),
+					remove: req.body.hasOwnProperty('delete')
+				});
+				res.redirect('/admin/roles/permission');
+			}else{
+				res.statusCode = 409;
+				res.send('permission with this name already exists ...');
+			}
+		});
 	}
 })
 

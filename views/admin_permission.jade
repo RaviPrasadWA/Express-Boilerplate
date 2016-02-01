@@ -58,10 +58,13 @@ block content
 								location.reload();
 							},
 							error: function(response){
-								console.log( response );
+								if( response.status == 409 ){
+									vex.dialog.open({
+										message: "<h2 class='dashboard-heading'>Permission already exists</h2>"
+										});
+								}
 							}
 						})
-						console.log( data );
 					}
 				});
 			});
