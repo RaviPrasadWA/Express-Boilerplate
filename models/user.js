@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       associate: function(models){
-        User.hasMany(models.Role,{ as: "Role" })
+        //User.hasMany(models.Role,{ as: "Role" })
       }
     }
   });

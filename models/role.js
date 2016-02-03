@@ -6,7 +6,7 @@ module.exports = function(sequelize, Datatypes){
 	},{
 		classMethods: {
 			associate: function(models){
-				Role.hasMany( models.Permission, { as: "Permission" });
+				Role.belongsToMany( models.Permission, { through: "role_permission" ,as: {singular: 'Permission', plural: 'Permissions'} });
 			}
 		}
 	});

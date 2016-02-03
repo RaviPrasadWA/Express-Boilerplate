@@ -7,6 +7,12 @@ module.exports = function(sequelize, Datatypes){
 		retrieve: { type: Datatypes.BOOLEAN, defaultValue: false },
 		modify: { type: Datatypes.BOOLEAN, defaultValue: false },
 		remove: { type: Datatypes.BOOLEAN, defaultValue: false }
+	},{
+		classMethods: {
+			associate: function(models){
+				Permission.belongsToMany( models.Role, { through: "role_permission" ,as: {singular: 'Role', plural: 'Roles'}});
+			}
+		}
 	});
 	return Permission
 }
