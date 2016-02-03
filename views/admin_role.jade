@@ -29,21 +29,31 @@ block content
 								thead
 									tr
 										th Name
+										th Resources
 								each role in roles   
 									tbody
 										tr
 											td= role.name
+											each resource in role.getPermissions
+												resource
 				div(class="permission-role-info" style="display: none")
 					each permission in permissions
 						div(class="display-info" id=permission.id)= permission.resource
 		script.
 			$('.add-role').click(function(){
+				var input_string = "";
 				$(".permission-role-info .display-info").each(function(index){
-					console.log( this.id, this.textContent );
+					input_string += "<label class='checkbox-inline'><input name=";
+					input_string += this.textContent + " ";
+					input_string += "type='checkbox' ";
+					input_string += "value=" + this.id + " >"
+					input_string += this.textContent +"</label>";
+
+					console.log( input_string );
 				})
 				vex.dialog.open({
 					message: "<h2 class='dashboard-heading'> Create New Role </h2>",
-					input : "<input name='name' type='text' placeholder='Name' required />",
+					input : "<input name='name' type='text' placeholder='Name' required />"+input_string,
 					callback: function(data){
 						$.ajax({
 							type: 'POST',

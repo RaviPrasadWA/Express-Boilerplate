@@ -33,6 +33,15 @@ router.get('/', function(req, res) {
 router.get('/roles', function(req, res){
 	models.Role.findAll({}).then(function(roles){
 		models.Permission.findAll({}).then(function(permissions){
+			var resource_display = {};
+			roles.forEach(function(role){
+				role.getPermissions().then(function(perm){
+					perm.forEach(function(inner_perm){
+						console.log( inner_perm.dataValues.id );
+					})
+				}) 
+			})
+		
 			res.render('admin_role',{
 			title: 'Role Administration',
 			name: 'Roles',
@@ -45,8 +54,31 @@ router.get('/roles', function(req, res){
 
 router.post('/roles/create', function(req, res){
 	if( req.user ){
-		console.log( req.body );
-		res.send("got data .....");
+		if( Object.keys(req.body).length > 0 ){
+			req.body = JSON.parse(JSON.stringify(req.body));
+			var name = req.body['name'];
+			var permissions = [];
+			delete req.body['name'];
+
+
+			models.Role.findOne({ where:{name: name} }).then(function(role){
+				if(role){
+					res.statusCode = 409;
+					res.send("role with this name exists .....");
+				}else{
+					models.Role.create({ name: name}).then(function(role){
+						for(var key in req.body){
+							models.Permission.findOne({ where: {id : req.body[key]} }).then(function(permission){
+								role.setPermissions(permission).then(function(){
+
+									});
+							});
+						}
+						res.redirect('/admin');
+					});
+				}
+			});
+		}
 	}
 })
 
