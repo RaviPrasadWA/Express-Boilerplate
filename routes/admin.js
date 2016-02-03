@@ -37,7 +37,7 @@ router.get('/roles', function(req, res){
 			roles.forEach(function(role){
 				role.getPermissions().then(function(perm){
 					perm.forEach(function(inner_perm){
-						console.log( inner_perm.dataValues.id );
+						console.log( role.name , inner_perm.dataValues.resource );
 					})
 				}) 
 			})
