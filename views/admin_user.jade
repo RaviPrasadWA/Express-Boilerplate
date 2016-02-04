@@ -3,42 +3,48 @@ extends layout
 block content
 
   if req.user
-    div(class="container-fluid")
-      div(class="row")
-        div(class="col-sm-3 sidebar admin-sidebar")
-          div(class="text-center")
-            h2(class="brand")= title
-            img(src="/images/flat-avatar.png" class="user-avatar")
-            div(class="row")
-              a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
-            div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-              a(href="/admin") USER
-            div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-              a(href="/admin/roles") ROLES
-            div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-              a(href="/admin/roles/permission") PERMISSION
+    div(class='column col-sm-2 col-xs-1 sidebar-offcanvas' id='sidebar' style='text-align: center;')
+      ul(class='nav')
+        li
+          a(href='#' data-toggle='offcanvas' class='visible-xs text-center')
+            i(class='glyphicon glyphicon-chevron-right')
 
-        div(class="info-display")
-          div(class="col-md-9")
-            h2(class="dashboard-heading")= name
-            button(class="btn add-user") Add User
+      ul(class='nav hidden-xs' id='lg-menu')
+        h2(class="brand")= title
+        img(src="/images/flat-avatar.png" class="user-avatar")
 
-          div(class="col-md-9")
+        li(class='active')
+          a(href='/admin')
+            i(class='glyphicon glyphicon-user')  User
+        li
+          a(href='/admin/roles')
+            i(class='glyphicon glyphicon-list')  Roles
+        li
+          a(href='/admin/roles/permission')
+            i(class='glyphicon glyphicon-random')  Permission
 
-            div(class="table-responsive")
-              table(class="table")
-                thead
-                  tr
-                    th Username
-                    th Email
-                    th Actions
-                  each user in users   
+    div(class='column col-sm-10 col-xs-11' id='main')
+      div(class='padding')
+        div(class='full col-sm-12')
+          div(class='row')
+            div(class='col-sm-12')
+              h2(class="dashboard-heading")= name
+              button(class="btn add-user") Add User
+
+              div(class="table-responsive")
+                table(class="table")
+                  thead
+                    tr
+                      th Username
+                      th Email
+                      th Actions
+                  each user in users
                     tbody
                       tr
                         td= user.username
                         td= user.email
-                        td 
-                          a(href="/users/" + user.id + "/destroy") 
+                        td
+                          a(href="/users/" + user.id + "/destroy")
                             button(type="button" class="btn btn-xs btn-danger")
                               span(class="glyphicon glyphicon-remove")
     script.

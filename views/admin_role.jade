@@ -30,12 +30,11 @@ block content
 									tr
 										th Name
 										th Resources
-								each role in roles   
-									tbody
+								tbody
+									each val, key in resource_display
 										tr
-											td= role.name
-											each resource in role.getPermissions
-												resource
+											td= key
+											td= val
 				div(class="permission-role-info" style="display: none")
 					each permission in permissions
 						div(class="display-info" id=permission.id)= permission.resource

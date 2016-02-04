@@ -3,6 +3,8 @@ var express = require('express');
 var router  = express.Router();
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
 var acl = require('acl');
+var async = require('async');
+var Lazy = require('lazy');
 acl = new acl(new acl.redisBackend(client, "acl_"));
 
 router.get('/', function(req, res) {
@@ -31,22 +33,39 @@ router.get('/', function(req, res) {
 });
 
 router.get('/roles', function(req, res){
+
 	models.Role.findAll({}).then(function(roles){
 		models.Permission.findAll({}).then(function(permissions){
 			var resource_display = {};
+			var iterate = 0;
 			roles.forEach(function(role){
+				resource_display[role.name] = [];
+				var q = async.queue(function (task, callback) {
+					resource_display[role.name].push(task.resource);
+					callback();
+				}, 5);
+
+				q.drain = function() {
+					console.log(roles.length ,iterate)
+					if(roles.length == iterate){
+						console.log(resource_display)
+						res.render('admin_role',{
+							title: 'Role Administration',
+							name: 'Roles',
+							roles: roles,
+							permissions: permissions,
+							resource_display: resource_display
+						});
+					}
+				}
 				role.getPermissions().then(function(perm){
-					perm.forEach(function(inner_perm){
-						console.log( role.name , inner_perm.dataValues.resource );
-					})
-				}) 
-			})
-		
-			res.render('admin_role',{
-			title: 'Role Administration',
-			name: 'Roles',
-			roles: roles,
-			permissions: permissions
+					perm.forEach(function(permissionData, index, callback){
+						q.push(permissionData.dataValues, function(){
+							
+						});
+					});
+				});
+				iterate++;
 			});
 		});
 	});
@@ -54,7 +73,7 @@ router.get('/roles', function(req, res){
 
 router.post('/roles/create', function(req, res){
 	if( req.user ){
-		if( Object.keys(req.body).length > 0 ){
+		if( Object.keys(req.body).length > 0 ){ a
 			req.body = JSON.parse(JSON.stringify(req.body));
 			var name = req.body['name'];
 			var permissions = [];

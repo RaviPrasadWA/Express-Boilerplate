@@ -22,7 +22,8 @@
     "passport": "*",
     "express-session": "*",
     "passport-local": "*",
-    "acl": "*"
+    "acl": "*",
+    "lazy": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.33",
