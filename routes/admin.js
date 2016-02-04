@@ -40,13 +40,13 @@ router.get('/roles', function(req, res){
 			var iterate = 0;
 			roles.forEach(function(role){
 				resource_display[role.name] = [];
-				var q = async.queue(function (task, callback) {
-					resource_display[role.name].push(task.resource);
+
+				var q = async.queue(function (data, callback) {
+					resource_display[role.name].push(data.resource);
 					callback();
 				}, 5);
 
 				q.drain = function() {
-					console.log(roles.length ,iterate)
 					if(roles.length == iterate){
 						console.log(resource_display)
 						res.render('admin_role',{
@@ -54,18 +54,15 @@ router.get('/roles', function(req, res){
 							name: 'Roles',
 							roles: roles,
 							permissions: permissions,
-							resource_display: resource_display
 						});
 					}
 				}
 				role.getPermissions().then(function(perm){
 					perm.forEach(function(permissionData, index, callback){
 						q.push(permissionData.dataValues, function(){
-							
 						});
 					});
 				});
-				iterate++;
 			});
 		});
 	});
@@ -73,7 +70,7 @@ router.get('/roles', function(req, res){
 
 router.post('/roles/create', function(req, res){
 	if( req.user ){
-		if( Object.keys(req.body).length > 0 ){ a
+		if( Object.keys(req.body).length > 0 ){
 			req.body = JSON.parse(JSON.stringify(req.body));
 			var name = req.body['name'];
 			var permissions = [];
