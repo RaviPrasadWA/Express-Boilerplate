@@ -41,14 +41,15 @@ router.get('/roles', function(req, res){
 			roles.forEach(function(role){
 				resource_display[role.name] = [];
 
-				var q = async.queue(function (data, callback) {
+				var q = async.queue(function (data, callback, sz) {
+					//console.log(sz, iterate);
 					resource_display[role.name].push(data.resource);
 					callback();
 				}, 5);
 
 				q.drain = function() {
 					if(roles.length == iterate){
-						console.log(resource_display)
+						//console.log(resource_display)
 						res.render('admin_role',{
 							title: 'Role Administration',
 							name: 'Roles',
@@ -57,10 +58,12 @@ router.get('/roles', function(req, res){
 						});
 					}
 				}
-				role.getPermissions().then(function(perm){
+				role.getPermissions().then(function(perm){ 
+				
 					perm.forEach(function(permissionData, index, callback){
 						q.push(permissionData.dataValues, function(){
-						});
+							iterate++;
+						}, 2);
 					});
 				});
 			});
