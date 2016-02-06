@@ -1,5 +1,6 @@
 var models  = require('../models');
 var express = require('express');
+var config = require('../config/config.json');
 var router  = express.Router();
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
 var acl = require('acl');
@@ -7,15 +8,19 @@ var async = require('async');
 var Lazy = require('lazy');
 acl = new acl(new acl.redisBackend(client, "acl_"));
 
+var BASE_URL = config.development.base_url;
+
 router.get('/', function(req, res) {
 	if( req.user ){
+		
 		acl.hasRole(req.user.id, 'superuser', function(err, hasrole){
 			if( hasrole ){
 				models.User.findAll({}).then(function(users) {
 					res.render('admin_user', {
-						title: 'User Administration',
+						title: 'User Admin',
 						name: 'Users',
-						users: users
+						users: users,
+						base_url: BASE_URL
 					});
 				});
 			}else{
@@ -24,9 +29,11 @@ router.get('/', function(req, res) {
 		})
 	}else{
 		models.User.findAll({}).then(function(users) {
+			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.render('admin_user', {
-				title: 'User Administration',
-				users: []
+				title: 'User Admin',
+				users: [],
+				base_url: BASE_URL
 			});
 		});
 	}
@@ -35,6 +42,20 @@ router.get('/', function(req, res) {
 router.get('/roles', function(req, res){
 
 	models.Role.findAll({}).then(function(roles){
+
+		if(roles.length == 0){
+			models.Permission.findAll({}).then(function(permissions){
+				res.render('admin_role',{
+					title: 'Role Admin',
+					name: 'Roles',
+					roles: roles,
+					permissions: permissions,
+					resource_display: [],
+					base_url: BASE_URL
+				});
+			});
+		}
+
 		models.Permission.findAll({}).then(function(permissions){
 			var resource_display = {};
 			var iterate = 0;
@@ -55,11 +76,12 @@ router.get('/roles', function(req, res){
 				inner_async.drain = function(){
 					if(Object.keys(resource_display).length === roles.length){
 						res.render('admin_role',{
-							title: 'Role Administration',
+							title: 'Role Admin',
 							name: 'Roles',
 							roles: roles,
 							permissions: permissions,
-							resource_display: resource_display
+							resource_display: resource_display,
+							base_url: BASE_URL
 						});
 					}
 				}
@@ -116,7 +138,8 @@ router.get('/roles/permission', function(req, res){
 		res.render('admin_permission',{
 			title: 'Permission Admin',
 			name: 'Permission',
-			permissions: permissions
+			permissions: permissions,
+			base_url: BASE_URL
 		});
 	});
 })

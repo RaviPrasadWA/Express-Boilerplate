@@ -34,23 +34,23 @@ block content
               h2(class="dashboard-heading")= name
               button(class="btn add-user") Add User
 
-            div(class="col-md-12")
-              div(class="table-responsive")
-                table(class="table")
-                  thead
-                    tr
-                      th Username
-                      th Email
-                      th Actions
-                  each user in users
-                    tbody
-                      tr
-                        td= user.username
-                        td= user.email
-                        td
-                          a(href="/users/" + user.id + "/destroy")
-                            button(type="button" class="btn btn-xs btn-danger")
-                              span(class="glyphicon glyphicon-remove")
+        div(class="col-md-12")
+          div(class="table-responsive")
+            table(class="table")
+              thead
+                tr
+                  th Username
+                  th Email
+                  th Actions
+              each user in users
+                tbody
+                  tr
+                    td= user.username
+                    td= user.email
+                    td
+                      a(href="/users/" + user.id + "/destroy")
+                        button(type="button" class="btn btn-xs btn-danger")
+                          span(class="glyphicon glyphicon-remove")
     script.
       $('.add-user').click(function(){
         vex.dialog.open(
@@ -61,7 +61,7 @@ block content
             if( data.password == data.repeat_password ){
               $.ajax({
                 type: 'POST',
-                url: 'http://localhost:3000/users/create',
+                url: "#{base_url}" + '/users/create',
                 data: data,
                 success: function(a,b,c){
                   location.reload();
@@ -96,7 +96,7 @@ block content
         input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='password' placeholder='Password' required />",
         callback : function(data){
           $.ajax({
-            url: 'http://localhost:3000/auth/login',
+            url: "#{base_url}" + '/auth/login',
             type: 'POST',
             data: data,
             success: function(a,b,c){ 

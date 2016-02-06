@@ -1,7 +1,8 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "./db.development.sqlite"
+    "storage": "./db.development.sqlite",
+    "base_url": "http://192.168.0.112:3000"
   },
   "test": {
     "username": "root",

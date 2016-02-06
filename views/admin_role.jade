@@ -33,23 +33,23 @@ block content
 							h2(class="dashboard-heading")= name
 							button(class="btn add-role") Add Role
 
-						div(class="col-md-12")
-							div(class="table-responsive")
-								table(class="table")
-									thead
-										tr
-											th Name
-											th Resources
-											th Actions
-									tbody
-										each val, key in resource_display
-											tr
-												td= key
-												td= val
-												td 
-													a(href="#")
-														button(type="button" class="btn btn-xs btn-danger")
-															span(class="glyphicon glyphicon-remove")
+				div(class="col-md-12")
+					div(class="table-responsive")
+						table(class="table")
+							thead
+								tr
+									th Name
+									th Resources
+									th Actions
+							tbody
+								each val, key in resource_display
+									tr
+										td= key
+										td= val
+										td 
+											a(href="#")
+												button(type="button" class="btn btn-xs btn-danger")
+													span(class="glyphicon glyphicon-remove")
 				div(class="permission-role-info" style="display: none")
 					each permission in permissions
 						div(class="display-info" id=permission.id)= permission.resource
@@ -71,7 +71,7 @@ block content
 					callback: function(data){
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:3000/admin/roles/create',
+							url: "#{base_url}" + '/admin/roles/create',
 							data: data,
 							success: function(a,b,c){
 								location.reload();
@@ -91,7 +91,7 @@ block content
 				input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='password' placeholder='Password' required />",
 				callback : function(data){
 					$.ajax({
-						url: 'http://localhost:3000/auth/login',
+						url: "#{base_url}" + '/auth/login',
 						type: 'POST',
 						data: data,
 						success: function(a,b,c){ 

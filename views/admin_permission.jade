@@ -2,71 +2,82 @@ extends layout
 
 block content
 	if req.user
-		div(class="container-fluid")
-			div(class="row")
-				div(class="col-sm-3 sidebar admin-sidebar")
-					div(class="text-center")
-						h2(class="brand")= title
-						img(src="/images/flat-avatar.png" class="user-avatar")
-						div(class="row")
-							a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
-						div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-							a(href="/admin") USER
-						div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-							a(href="/admin/roles") ROLES
-						div( class="btn btn-sm btn-block btn-default user-admin-nav" )
-							a(href="/admin/roles/permission") PERMISSION
+		div(class='column col-sm-2 col-xs-1 sidebar-offcanvas' id='sidebar' style='text-align: center;')
+			ul(class='nav')
+				li
+					a(href='#' data-toggle='offcanvas' class='visible-xs text-center')
+						i(class='glyphicon glyphicon-chevron-right')
 
-				div(class="info-display")
-					div(class="col-md-9")
-						h2(class="dashboard-heading")= name
-						button(class="btn add-permission") Add Permission
+			ul(class='nav hidden-xs' id='lg-menu')
+				h2(class="brand")= title
+				img(src="/images/flat-avatar.png" class="user-avatar")
 
-					div(class="col-md-9")
-						div(class="table-responsive")
-							table(class="table")
-								thead
+				div(class="row")
+					a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
+
+				li
+					a(href='/admin')
+						i(class='glyphicon glyphicon-user')  User
+				li
+					a(href='/admin/roles')
+						i(class='glyphicon glyphicon-list')  Roles
+				li(class='active')
+					a(href='/admin/roles/permission')
+						i(class='glyphicon glyphicon-random')  Permission
+
+		div(class='column col-sm-10 col-xs-11' id='main')
+			div(class='padding')
+				div(class='full col-sm-12')
+					div(class='row')
+						div(class='col-sm-12')
+							h2(class="dashboard-heading")= name
+							button(class="btn add-permission") Add Permission
+
+				div(class="col-md-12")
+					div(class="table-responsive")
+						table(class="table")
+							thead
+								tr
+									th(style="text-align: center;") id
+									th(style="text-align: center;") Resource
+									th(style="text-align: center;") C
+									th(style="text-align: center;") R
+									th(style="text-align: center;") U
+									th(style="text-align: center;") D
+									th(style="text-align: center;") Action
+							tbody
+								each permission in permissions   
 									tr
-										th(style="text-align: center;") id
-										th(style="text-align: center;") Resource
-										th(style="text-align: center;") C
-										th(style="text-align: center;") R
-										th(style="text-align: center;") U
-										th(style="text-align: center;") D
-										th(style="text-align: center;") Action
-								tbody
-									each permission in permissions   
-										tr
-											td(style="text-align: center;")= permission.id
-											td(style="text-align: center;")= permission.resource
+										td(style="text-align: center;")= permission.id
+										td(style="text-align: center;")= permission.resource
 
-											if( permission.create )
-												td(style="text-align: center;color: #5CB85C;")= permission.create
-											else
-												td(style="text-align: center;color: #D9534F;")= permission.create
+										if( permission.create )
+											td(style="text-align: center;color: #5CB85C;")= permission.create
+										else
+											td(style="text-align: center;color: #D9534F;")= permission.create
 
-											if( permission.retrieve )
-												td(style="text-align: center;color: #5CB85C;")= permission.retrieve
-											else
-												td(style="text-align: center;color: #D9534F;")= permission.retrieve
+										if( permission.retrieve )
+											td(style="text-align: center;color: #5CB85C;")= permission.retrieve
+										else
+											td(style="text-align: center;color: #D9534F;")= permission.retrieve
 
-											if( permission.modify )
-												td(style="text-align: center;color: #5CB85C;")= permission.modify
-											else
-												td(style="text-align: center;color: #D9534F;")= permission.modify
+										if( permission.modify )
+											td(style="text-align: center;color: #5CB85C;")= permission.modify
+										else
+											td(style="text-align: center;color: #D9534F;")= permission.modify
 
-											if( permission.remove )
-												td(style="text-align: center;color: #5CB85C;")= permission.remove
-											else
-												td(style="text-align: center;color: #D9534F;")= permission.remove
+										if( permission.remove )
+											td(style="text-align: center;color: #5CB85C;")= permission.remove
+										else
+											td(style="text-align: center;color: #D9534F;")= permission.remove
 
-											td(style="text-align: center;")
-												a(href="/admin/" + permission.id + "/roles/permission/destroy") 
-													button(type="button" class="btn btn-xs btn-danger")
-														span(class="glyphicon glyphicon-remove")
-												a(href="#" class="permission-edit") 
-													button(type="button" class="btn btn-xs btn-success")
-														span(class="glyphicon glyphicon-edit")
+										td(style="text-align: center;")
+											a(href="/admin/" + permission.id + "/roles/permission/destroy") 
+												button(type="button" class="btn btn-xs btn-danger")
+													span(class="glyphicon glyphicon-remove")
+											a(href="#" class="permission-edit") 
+												button(type="button" class="btn btn-xs btn-success")
+													span(class="glyphicon glyphicon-edit")
 		script.
 			$('.add-permission').click(function(){
 				vex.dialog.open({
@@ -75,7 +86,7 @@ block content
 					callback: function(data){
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:3000/admin/roles/permission/create',
+							url: "#{base_url}" + '/admin/roles/permission/create',
 							data: data,
 							success: function(a,b,c){
 								location.reload();
@@ -135,7 +146,7 @@ block content
 						data['id'] = id_;
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:3000/admin/roles/permission/edit',
+							url: "#{base_url}" + '/admin/roles/permission/edit',
 							data: data,
 							success: function(a,b,c){
 								location.reload();
@@ -158,7 +169,7 @@ block content
 				input : "<input name='username' type='text' placeholder='Email' required /><input name='password' type='password' placeholder='Password' required />",
 				callback : function(data){
 					$.ajax({
-						url: 'http://localhost:3000/auth/login',
+						url: "#{base_url}" + '/auth/login',
 						type: 'POST',
 						data: data,
 						success: function(a,b,c){ 
