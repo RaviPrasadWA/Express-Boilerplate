@@ -13,6 +13,9 @@ block content
         h2(class="brand")= title
         img(src="/images/flat-avatar.png" class="user-avatar")
 
+        div(class="row")
+          a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
+
         li(class='active')
           a(href='/admin')
             i(class='glyphicon glyphicon-user')  User
@@ -31,6 +34,7 @@ block content
               h2(class="dashboard-heading")= name
               button(class="btn add-user") Add User
 
+            div(class="col-md-12")
               div(class="table-responsive")
                 table(class="table")
                   thead

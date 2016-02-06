@@ -38,35 +38,44 @@ router.get('/roles', function(req, res){
 		models.Permission.findAll({}).then(function(permissions){
 			var resource_display = {};
 			var iterate = 0;
-			roles.forEach(function(role){
-				resource_display[role.name] = [];
 
-				var q = async.queue(function (data, callback, sz) {
-					//console.log(sz, iterate);
-					resource_display[role.name].push(data.resource);
-					callback();
+			var outer_async = async.queue(function(data, outer_callback, sz){
+				var label = data.dataValues.name;
+				var toSend = {};
+				toSend[label] = null;
+
+				var inner_async = async.queue(function(inner_data, inner_callback, sz){
+					resource_display[data.dataValues.name] = [];
+					inner_data[Object.keys(inner_data)[0]].forEach(function(entity){
+						resource_display[Object.keys(inner_data)[0]].push(entity.resource);
+					})
+					inner_callback();
 				}, 5);
 
-				q.drain = function() {
-					if(roles.length == iterate){
-						//console.log(resource_display)
+				inner_async.drain = function(){
+					if(Object.keys(resource_display).length === roles.length){
 						res.render('admin_role',{
 							title: 'Role Administration',
 							name: 'Roles',
 							roles: roles,
 							permissions: permissions,
+							resource_display: resource_display
 						});
 					}
 				}
-				role.getPermissions().then(function(perm){ 
+
 				
-					perm.forEach(function(permissionData, index, callback){
-						q.push(permissionData.dataValues, function(){
-							iterate++;
-						}, 2);
-					});
-				});
-			});
+				data.getPermissions().then(function(permission){
+					toSend[label] = permission;
+					inner_async.push(toSend, function(){}, 2);
+				})
+				outer_callback();
+			}, 5);
+
+			outer_async.drain = function(){
+			}
+
+			outer_async.push( roles, function(){}, 2);
 		});
 	});
 })
