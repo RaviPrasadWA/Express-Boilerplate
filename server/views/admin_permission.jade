@@ -2,28 +2,6 @@ extends layout
 
 block content
 	if req.user
-		div(class='column col-sm-2 col-xs-1 sidebar-offcanvas' id='sidebar' style='text-align: center;')
-			ul(class='nav')
-				li
-					a(href='#' data-toggle='offcanvas' class='visible-xs text-center')
-						i(class='glyphicon glyphicon-chevron-right')
-
-			ul(class='nav hidden-xs' id='lg-menu')
-				h2(class="brand")= title
-				img(src="/images/flat-avatar.png" class="user-avatar")
-
-				div(class="row")
-					a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
-
-				li
-					a(href='/admin')
-						i(class='glyphicon glyphicon-user')  User
-				li
-					a(href='/admin/roles')
-						i(class='glyphicon glyphicon-list')  Roles
-				li(class='active')
-					a(href='/admin/roles/permission')
-						i(class='glyphicon glyphicon-random')  Permission
 
 		div(class='column col-sm-10 col-xs-11' id='main')
 			div(class='padding')
@@ -72,8 +50,8 @@ block content
 											td(style="text-align: center;color: #D9534F;")= permission.remove
 
 										td(style="text-align: center;")
-											a(href="/admin/" + permission.id + "/roles/permission/destroy") 
-												button(type="button" class="btn btn-xs btn-danger")
+											a(href="" id=permission.id name=permission.resource) 
+												button(type="button" class="btn btn-xs btn-danger permission-delete")
 													span(class="glyphicon glyphicon-remove")
 											a(href="#" class="permission-edit") 
 												button(type="button" class="btn btn-xs btn-success")
@@ -162,6 +140,39 @@ block content
 					}
 				});
 			})
+
+		script.
+			$('.permission-delete').click(function(e){
+				e.preventDefault();
+				var _id = this.parentElement.id
+				vex.dialog.open({
+					message: "<h2 class='dashboard-heading'> Are you sure you want to delete : </h2><h1 class='dashboard-heading'>" + this.parentElement.name + "</h1>",
+					callback: function(toSubmit){
+								if(toSubmit){
+									$.ajax({
+										type: 'GET',
+										url: "/admin/" + _id + "/roles/permission/destroy",
+										success: function(){
+											vex.dialog.open({
+												message: "<h2 class='dashboard-heading'> Deleted Successfully .....</h2>",
+												callback: function(toSubmit){
+														if(toSubmit){
+															location.reload();
+														}
+
+													}
+												});
+										},
+										error: function(){
+											console.log("some error occured.....");
+										}
+									})
+								}
+
+						},
+					});
+			})
+
 	else
 		script.
 			vex.dialog.open({

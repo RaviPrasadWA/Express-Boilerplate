@@ -29,7 +29,6 @@ router.get('/', function(req, res) {
 		})
 	}else{
 		models.User.findAll({}).then(function(users) {
-			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.render('admin_user', {
 				title: 'User Admin',
 				users: [],
@@ -132,11 +131,17 @@ router.post('/roles/create', function(req, res){
 	}
 })
 
+router.get('/:role_name/roles/destroy', function(req, res) {
+	console.log( req.params );
+	models.Role.destroy( { where: { name: req.params.role_name } }).then(function(role){
+		res.send('deleted successfully');
+	});
+});
 
 router.get('/roles/permission', function(req, res){
 	models.Permission.findAll({}).then(function(permissions){
 		res.render('admin_permission',{
-			title: 'Permission Admin',
+			title: 'Permissions',
 			name: 'Permission',
 			permissions: permissions,
 			base_url: BASE_URL
@@ -170,7 +175,7 @@ router.post('/roles/permission/create', function(req, res){
 router.get('/:permission_id/roles/permission/destroy', function(req, res) {
 	models.Permission.destroy({
 		where: { id: req.params.permission_id }}).then(function() {
-			res.redirect('/admin/roles/permission');
+			res.send('deleted successfully ....');
 		});
 	});
 

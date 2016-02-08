@@ -1,30 +1,8 @@
 extends layout
 
 block content
+
 	if req.user
-		div(class='column col-sm-2 col-xs-1 sidebar-offcanvas' id='sidebar' style='text-align: center;')
-			ul(class='nav')
-				li
-					a(href='#' data-toggle='offcanvas' class='visible-xs text-center')
-						i(class='glyphicon glyphicon-chevron-right')
-
-			ul(class='nav hidden-xs' id='lg-menu')
-				h2(class="brand")= title
-				img(src="/images/flat-avatar.png" class="user-avatar")
-
-				div(class="row")
-					a(href="/auth/logout" class="btn btn-white btn-outline btn-rounded btn-sm logout") Logout
-
-				li
-					a(href='/admin')
-						i(class='glyphicon glyphicon-user')  User
-				li(class='active')
-					a(href='/admin/roles')
-						i(class='glyphicon glyphicon-list')  Roles
-				li
-					a(href='/admin/roles/permission')
-						i(class='glyphicon glyphicon-random')  Permission
-
 		div(class='column col-sm-10 col-xs-11' id='main')
 			div(class='padding')
 				div(class='full col-sm-12')
@@ -47,8 +25,8 @@ block content
 										td= key
 										td= val
 										td 
-											a(href="#")
-												button(type="button" class="btn btn-xs btn-danger")
+											a(href="" name=key)
+												button(type="button" class="btn btn-xs btn-danger role-delete")
 													span(class="glyphicon glyphicon-remove")
 				div(class="permission-role-info" style="display: none")
 					each permission in permissions
@@ -62,8 +40,6 @@ block content
 					input_string += "type='checkbox' ";
 					input_string += "value=" + this.id + " >"
 					input_string += this.textContent +"</label>";
-
-					console.log( input_string );
 				})
 				vex.dialog.open({
 					message: "<h2 class='dashboard-heading'> Create New Role </h2>",
@@ -77,13 +53,52 @@ block content
 								location.reload();
 							},
 							error: function(response){
-								console.log( response );
+
+								if( response.status == 409 ){
+									vex.dialog.open({
+										message: "<h2 class='dashboard-heading'>" + response.responseText + "</h2>",
+										callback: function(toSubmit){
+											if( toSubmit ){
+
+											}
+										}
+									});	
+								}
 							}
-						})
-						console.log( data );
+						});
 					}
 				});
 			});
+
+		script.
+			$('.role-delete').click(function(e){
+				e.preventDefault();
+				var _name = this.parentElement.name;
+				vex.dialog.open({
+					message: "<h2 class='dashboard-heading'> Are you sure you want to delete : </h2><h1 class='dashboard-heading'>" + _name + "</h1>",
+					callback: function(toSubmit){
+						if( toSubmit ){
+							$.ajax({
+								type: 'GET',
+								url: "/admin/" + _name + "/roles/destroy",
+								success: function( cd, message, sendbACK){
+									if( message == 'success'	){
+										vex.dialog.open({
+											message: "<h2 class='dashboard-heading'> Deleted Successfully ... </h2>",
+											callback: function(toSubmit){
+												if(toSubmit){
+													location.reload();
+												}
+											}
+										});
+									}
+								}
+							})
+
+						}
+					}
+				});	
+			})
 	else
 		script.
 			vex.dialog.open({

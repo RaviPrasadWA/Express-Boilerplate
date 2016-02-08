@@ -23,7 +23,8 @@
     "express-session": "*",
     "passport-local": "*",
     "acl": "*",
-    "lazy": "*"
+    "react": "*",
+    "react-dom": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.33",
