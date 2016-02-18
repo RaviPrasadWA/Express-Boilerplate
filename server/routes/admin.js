@@ -5,7 +5,6 @@ var router  = express.Router();
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
 var acl = require('acl');
 var async = require('async');
-var Lazy = require('lazy');
 acl = new acl(new acl.redisBackend(client, "acl_"));
 
 var BASE_URL = config.development.base_url;
@@ -24,7 +23,15 @@ router.get('/', function(req, res) {
 					});
 				});
 			}else{
-				res.send("dont have permission ...");
+				models.User.findAll({}).then(function(users) {
+					res.render('admin_user', {
+						title: 'User Admin',
+						name: 'Users',
+						users: users,
+						base_url: BASE_URL
+					});
+				});
+				//res.send("dont have permission ..."); // -> TODO: ACTIVATE THIS CODE AND REMOVE THE ABOVE ONE
 			}
 		})
 	}else{
@@ -109,18 +116,18 @@ router.post('/roles/create', function(req, res){
 			var permissions = [];
 			delete req.body['name'];
 
-
 			models.Role.findOne({ where:{name: name} }).then(function(role){
 				if(role){
 					res.statusCode = 409;
 					res.send("role with this name exists .....");
 				}else{
 					models.Role.create({ name: name}).then(function(role){
+
 						for(var key in req.body){
 							models.Permission.findOne({ where: {id : req.body[key]} }).then(function(permission){
 								role.setPermissions(permission).then(function(){
-
-									});
+									
+								});
 							});
 						}
 						res.redirect('/admin');
@@ -196,6 +203,12 @@ router.post('/roles/permission/edit', function(req, res) {
 				res.redirect('/admin/roles/permission');
 			});
 		});
+	}
+});
+
+router.get('/acl', function(req, res) {
+	if( req.user ){
+		res.send("acl comming soon .....");
 	}
 });
 

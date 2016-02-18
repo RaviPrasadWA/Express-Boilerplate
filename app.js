@@ -9,14 +9,12 @@ var routes = require('./server/routes/index');
 var users  = require('./server/routes/users');
 var auth  = require('./server/routes/auth');
 var admin  = require('./server/routes/admin');
-
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
 var models = require('./server/models');
-
 var client = require('redis').createClient(6379, '127.0.0.1', {no_ready_check: true});
 var acl = require('acl');
+
 acl = new acl(new acl.redisBackend(client, "acl_"));
 
 var app = express();
@@ -86,7 +84,6 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
 app.use('/admin',admin);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
